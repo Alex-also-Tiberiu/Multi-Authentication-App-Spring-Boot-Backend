@@ -11,7 +11,7 @@ This document describes the authentication and authorization system implemented 
 ```
 1. User Registration
    POST /api/v1/auth/register
-   └─> Returns access_token and refresh_token (in JSON for registration)
+   └─> Register new user
 
 2. User Login (Basic Authentication)
    POST /api/v1/auth/authenticate (with Authorization: Basic header)
