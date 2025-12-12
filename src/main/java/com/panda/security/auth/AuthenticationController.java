@@ -24,12 +24,11 @@ public class AuthenticationController {
     private final AuthenticationService service;
 
     @PostMapping(value = "/register", consumes = "application/json")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
+    public void register(@RequestBody RegisterRequest request) {
         LOGGER.info("POST /api/v1/auth/register - Registration request for email: {}", request.getEmail());
         try {
-            AuthenticationResponse response = service.register(request);
+            service.register(request);
             LOGGER.info("POST /api/v1/auth/register - Registration completed successfully for email: {}", request.getEmail());
-            return ResponseEntity.ok(response);
         } catch (Exception e) {
             LOGGER.error("POST /api/v1/auth/register - Error during registration for email: {} - Error: {}", request.getEmail(), e.getMessage(), e);
             throw e;
