@@ -6,7 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,29 +25,33 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register( @RequestBody RegisterRequest request ) {
-        LOGGER.info("POST /api/v1/auth/register - Richiesta registrazione per email: {}", request.getEmail());
+    @PostMapping(value = "/register")
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
+        LOGGER.info("POST /api/v1/auth/register (form) - Richiesta registrazione per email: {}", request.getEmail());
         try {
             AuthenticationResponse response = service.register(request);
-            LOGGER.info("POST /api/v1/auth/register - Registrazione completata con successo per email: {}", request.getEmail());
+            LOGGER.info("POST /api/v1/auth/register (form) - Registrazione completata con successo per email: {}", request.getEmail());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            LOGGER.error("POST /api/v1/auth/register - Errore durante registrazione per email: {} - Errore: {}", request.getEmail(), e.getMessage(), e);
+            LOGGER.error("POST /api/v1/auth/register (form) - Errore durante registrazione per email: {} - Errore: {}", request.getEmail(), e.getMessage(), e);
             throw e;
         }
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate( @RequestBody AuthenticationRequest request ) {
-        LOGGER.info("POST /api/v1/auth/authenticate - Richiesta autenticazione per email: {}", request.getEmail());
+    public ResponseEntity<AuthenticationResponse> authenticate(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            LOGGER.warn("POST /api/v1/auth/authenticate - User not authorized");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String email = authentication.getName();
         try {
-            AuthenticationResponse response = service.authenticate(request);
-            LOGGER.info("POST /api/v1/auth/authenticate - Autenticazione completata con successo per email: {}", request.getEmail());
+            AuthenticationResponse response = service.authenticate(authentication);
+            LOGGER.debug("POST /api/v1/auth/authenticate - Autenticazione completata con successo per {}", email);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            LOGGER.error("POST /api/v1/auth/authenticate - Errore durante autenticazione per email: {} - Errore: {}", request.getEmail(), e.getMessage(), e);
-            throw e;
+            LOGGER.error("POST /api/v1/auth/authenticate - {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
