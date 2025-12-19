@@ -1,15 +1,16 @@
 package com.panda.security;
 
-import com.panda.security.auth.AuthenticationService;
-import com.panda.security.auth.RegisterRequest;
+import com.panda.security.feature.auth.dto.RegisterRequest;
+import com.panda.security.feature.auth.service.AuthenticationService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-import static com.panda.security.user.Role.ADMIN;
-import static com.panda.security.user.Role.MANAGER;
+import static com.panda.security.feature.user.entity.Role.ADMIN;
+import static com.panda.security.feature.user.entity.Role.MANAGER;
+
 
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")

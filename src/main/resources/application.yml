@@ -5,6 +5,7 @@ logging:
     org.springframework: INFO
     org.apache.http: INFO
     com.panda.security: INFO
+    com.panda.security.config.security.filters: INFO
 # ------------------------------------------------------------------------------------------
 spring:
   datasource:

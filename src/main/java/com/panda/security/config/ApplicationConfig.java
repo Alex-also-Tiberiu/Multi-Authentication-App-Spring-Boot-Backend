@@ -1,8 +1,7 @@
 package com.panda.security.config;
 
-
-import com.panda.security.auditing.ApplicationAuditAware;
-import com.panda.security.user.UserRepository;
+import com.panda.security.core.auditing.ApplicationAuditAware;
+import com.panda.security.feature.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
